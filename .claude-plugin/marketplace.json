@@ -1,0 +1,20 @@
+{
+  "name": "claude-voice-marketplace",
+  "description": "Real-time text-to-speech for Claude Code using ElevenLabs",
+  "owner": {
+    "name": "Fernando Figueroa",
+    "email": "figueroabonacic@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "claude-voice",
+      "description": "Real-time text-to-speech for Claude Code responses using ElevenLabs",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "Fernando Figueroa",
+        "email": "figueroabonacic@gmail.com"
+      }
+    }
+  ]
+}

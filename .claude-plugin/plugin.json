@@ -1,0 +1,18 @@
+{
+  "name": "claude-voice",
+  "description": "Real-time text-to-speech for Claude Code responses using ElevenLabs",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fernando Figueroa",
+    "email": "figueroabonacic@gmail.com"
+  },
+  "repository": "https://github.com/ffigueroa/claude-voice",
+  "license": "MIT",
+  "keywords": [
+    "tts",
+    "text-to-speech",
+    "elevenlabs",
+    "voice",
+    "audio"
+  ]
+}
