@@ -18,7 +18,7 @@ In Claude Code:
 
 ```
 /plugin marketplace add ffigueroa/claude-voice
-/plugin install claude-voice@claude-voice
+/plugin install claude-voice@claude-voice-marketplace
 ```
 
 Then reload or restart Claude Code.
