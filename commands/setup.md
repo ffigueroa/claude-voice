@@ -10,7 +10,7 @@ Help the user configure ClaudeVoice. Follow these steps:
 
 3. Ask if they want to change the model (optional). Default: `eleven_flash_v2_5` (fastest). Other option: `eleven_multilingual_v2` (better quality, slower).
 
-4. Write the config file:
+4. Write the config and install the watcher script:
 
 ```bash
 mkdir -p ~/.config/claude-voice
@@ -25,10 +25,16 @@ Write `~/.config/claude-voice/config.json` with:
 }
 ```
 
-5. Confirm setup is complete. Tell the user to restart their Claude Code session so the watcher daemon starts, then activate with `/claude-voice:speak`.
+5. Copy the watcher script to the config directory so the SessionStart hook can find it:
+
+```bash
+cp ~/.claude/plugins/cache/claude-voice-marketplace/claude-voice/*/scripts/speak.py ~/.config/claude-voice/speak.py
+```
+
+6. Confirm setup is complete. Tell the user to restart their Claude Code session so the watcher daemon starts, then activate with `/claude-voice:speak`.
 
 If the user hasn't installed the plugin yet, guide them:
 ```
 /plugin marketplace add ffigueroa/claude-voice
-/plugin install claude-voice@claude-voice
+/plugin install claude-voice@claude-voice-marketplace
 ```

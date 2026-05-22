@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/speak.py\" --daemon",
+            "command": "python3 ~/.config/claude-voice/speak.py --daemon",
             "timeout": 5
           }
         ]
