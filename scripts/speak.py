@@ -97,46 +97,60 @@ def speak(text, config):
         log(f"TTS error: {e}")
 
 
-def find_transcript():
+def find_transcripts():
     projects_dir = Path.home() / ".claude" / "projects"
     if not projects_dir.exists():
+        return []
+    results = []
+    for p in projects_dir.rglob("*.jsonl"):
+        if "/subagents/" in str(p):
+            continue
+        results.append(str(p))
+    return results
+
+
+def find_transcript():
+    transcripts = find_transcripts()
+    if not transcripts:
         return None
-    transcripts = sorted(
-        projects_dir.rglob("*.jsonl"),
-        key=lambda p: p.stat().st_mtime,
-        reverse=True,
-    )
-    return str(transcripts[0]) if transcripts else None
+    return max(transcripts, key=lambda p: os.path.getmtime(p))
 
 
 def watch(transcript_path, config):
-    log(f"Watching: {transcript_path}")
+    log(f"Watching all transcripts (started with: {transcript_path})")
     spoken_markers = set()
-    current_transcript = transcript_path
+    file_positions = {}
 
-    try:
-        file_pos = os.path.getsize(current_transcript)
-    except OSError:
-        file_pos = 0
+    for t in find_transcripts():
+        try:
+            file_positions[t] = os.path.getsize(t)
+        except OSError:
+            file_positions[t] = 0
 
     while True:
         try:
-            newest = find_transcript()
-            if newest and newest != current_transcript:
-                log(f"Switching to new transcript: {newest}")
-                current_transcript = newest
-                try:
-                    file_pos = os.path.getsize(current_transcript)
-                except OSError:
-                    file_pos = 0
-                spoken_markers.clear()
+            current_transcripts = find_transcripts()
+            for t in current_transcripts:
+                if t not in file_positions:
+                    try:
+                        file_positions[t] = os.path.getsize(t)
+                    except OSError:
+                        file_positions[t] = 0
+                    log(f"New transcript: {t}")
 
-            current_size = os.path.getsize(current_transcript)
-            if current_size > file_pos:
-                with open(current_transcript, "r") as f:
-                    f.seek(file_pos)
+                try:
+                    current_size = os.path.getsize(t)
+                except OSError:
+                    continue
+
+                pos = file_positions.get(t, 0)
+                if current_size <= pos:
+                    continue
+
+                with open(t, "r") as f:
+                    f.seek(pos)
                     new_data = f.read()
-                    file_pos = f.tell()
+                    file_positions[t] = f.tell()
 
                 for line in new_data.strip().split("\n"):
                     if not line.strip():
