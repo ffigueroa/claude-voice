@@ -88,7 +88,7 @@ def speak(text, config):
         with urllib.request.urlopen(req, timeout=15) as resp:
             AUDIO_FILE.write_bytes(resp.read())
         log(f"Playing: {text}")
-        subprocess.Popen(
+        subprocess.run(
             ["afplay", str(AUDIO_FILE)],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
