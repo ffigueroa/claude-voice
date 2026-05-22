@@ -17,8 +17,11 @@ Claude includes short spoken summaries as HTML comment markers in responses. A b
 In Claude Code:
 
 ```
-/install ffigueroa/claude-voice
+/plugin marketplace add ffigueroa/claude-voice
+/plugin install claude-voice@claude-voice
 ```
+
+Then reload or restart Claude Code.
 
 ## Setup
 

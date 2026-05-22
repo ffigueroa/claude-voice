@@ -26,3 +26,9 @@ Write `~/.config/claude-voice/config.json` with:
 ```
 
 5. Confirm setup is complete. Tell the user to restart their Claude Code session so the watcher daemon starts, then activate with `/claude-voice:speak`.
+
+If the user hasn't installed the plugin yet, guide them:
+```
+/plugin marketplace add ffigueroa/claude-voice
+/plugin install claude-voice@claude-voice
+```
