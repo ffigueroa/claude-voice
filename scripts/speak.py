@@ -112,17 +112,28 @@ def find_transcript():
 def watch(transcript_path, config):
     log(f"Watching: {transcript_path}")
     spoken_markers = set()
+    current_transcript = transcript_path
 
     try:
-        file_pos = os.path.getsize(transcript_path)
+        file_pos = os.path.getsize(current_transcript)
     except OSError:
         file_pos = 0
 
     while True:
         try:
-            current_size = os.path.getsize(transcript_path)
+            newest = find_transcript()
+            if newest and newest != current_transcript:
+                log(f"Switching to new transcript: {newest}")
+                current_transcript = newest
+                try:
+                    file_pos = os.path.getsize(current_transcript)
+                except OSError:
+                    file_pos = 0
+                spoken_markers.clear()
+
+            current_size = os.path.getsize(current_transcript)
             if current_size > file_pos:
-                with open(transcript_path, "r") as f:
+                with open(current_transcript, "r") as f:
                     f.seek(file_pos)
                     new_data = f.read()
                     file_pos = f.tell()
