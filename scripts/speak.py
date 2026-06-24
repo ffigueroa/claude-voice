@@ -118,7 +118,9 @@ def find_transcript():
 
 def watch(transcript_path, config):
     log(f"Watching all transcripts (started with: {transcript_path})")
-    spoken_markers = set()
+    # Dedup por (transcript, uuid del entry) — no por texto del marker: dos turnos
+    # distintos que digan "Done." ambos deben sonar; el uuid identifica el turno.
+    spoken_entries = set()
     file_positions = {}
 
     for t in find_transcripts():
@@ -161,10 +163,16 @@ def watch(transcript_path, config):
                         continue
 
                     marker = extract_marker_from_entry(entry)
-                    if marker and marker not in spoken_markers:
-                        spoken_markers.add(marker)
-                        log(f"Live marker: {marker}")
-                        speak(marker, config)
+                    if marker:
+                        msg_id = (entry.get("message") or {}).get("id")
+                        eid = entry.get("uuid") or msg_id
+                        # Fallback por (transcript, texto, posición) si no hay uuid —
+                        # sigue siendo por-transcript, no global.
+                        key = (t, eid) if eid else (t, marker, pos)
+                        if key not in spoken_entries:
+                            spoken_entries.add(key)
+                            log(f"Live marker: {marker}")
+                            speak(marker, config)
 
             time.sleep(0.5)
         except KeyboardInterrupt:
